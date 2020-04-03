@@ -14,9 +14,9 @@
          ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
   :hook (after-init . global-anzu-mode))
 
-(require 'color-rg)
-(global-set-key (kbd "C-M-s") 'color-rg-search-input-in-project)
-
+(use-package color-rg
+	:ensure nil
+	:bind ("C-M-s" . color-rg-search-input))
 
 (provide 'init-search)
 

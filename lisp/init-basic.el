@@ -5,6 +5,7 @@
 ;; Author: T_Fighting <545298210@qq.com>
 ;; Keywords:
 
+
 (eval-when-compile
   (require 'init-custom))
 
@@ -14,24 +15,20 @@
 (setq frame-title-format '("T_Finghting Emacs - %b")
       icon-title-format frame-title-format)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; System Coding UTF-8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; System Coding ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when (fboundp 'set-charset-priority)
   (set-charset-priority 'unicode))
-
-;; Explicitly set the prefered coding systems to avoid annoying prompt
-;; from emacs (especially on Microsoft Windows)
 (prefer-coding-system 'utf-8)
-(set-language-environment 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-buffer-file-coding-system 'utf-8)
-(set-clipboard-coding-system 'utf-8)
-(set-file-name-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(modify-coding-system-alist 'process "*" 'utf-8)
-(setq locale-coding-system 'utf-8
-      default-process-coding-system '(utf-8 . utf-8))
+
+;; Solve python out chinese question.
+;; for python output chinese
+;; Emacs buffer -> python : encoding = utf8
+;; python output -> Eamcs : decoding = chinese-gbk-dos
+(modify-coding-system-alist 'process "python" '(chinese-gbk-dos . utf-8))
+;; format buffer
+;; Emacs buffer -> python : encoding = utf8
+;; python output -> Eamcs : decoding = chinese-gbk-dos
+(modify-coding-system-alist 'process "yapf" '(utf-8 . utf-8))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Inhibit load package at startup.
@@ -79,7 +76,7 @@
 ;; Modify keybindings map
 (setq w32-pass-lwindow-to-system nil
       w32-lwindow-modifier 'super)  ;; Left windows key
-(w32-register-hot-key [s-t])  ;; lock screen
+(w32-register-hot-key [s-])  ;; lock screen
 
 ;; Cancel keybindings
 (global-set-key (kbd "C-z") nil)
@@ -107,12 +104,6 @@
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t)
   :hook (after-init . show-paren-mode))
-
-;; Automatic parenthesis pairing
-(use-package elec-pair
-  :ensure nil
-  :hook (after-init . electric-pair-mode)
-  :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
 
 (use-package savehist
   :ensure nil

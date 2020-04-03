@@ -37,33 +37,22 @@
   (unless (minibuffer-window-active-p (selected-window))
     (revert-buffer t t)
     (message "Reverted this buffer.")))
-(global-set-key (kbd "<f5>") #'revert-this-buffer)
+(global-set-key (kbd "s-r") #'revert-this-buffer)
 
 ;; Open files via externaly applications
-(defun xah-open-in-external-app (&optional @fname)
-  "Open the current file or dired marked files in external app.
-The app is chosen from your OS's preference.
+(defun open-in-external-app ()
+	"Open files via externaly applications."
+	(interactive)
+	(let* ((file-path (if (derived-mode-p 'dired-mode)
+												(dired-get-file-for-visit)
+											(buffer-file-name))))
 
-When called in emacs lisp, if @fname is given, open that.
+		(if (string-match "\\(?:\\.\\(?:md\\|pdf\\)\\)" file-path)
+				(w32-shell-execute "open" file-path))))
 
-URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
-Version 2019-11-04"
-  (interactive)
-  (let* (
-         ($file-list
-          (if @fname
-              (progn (list @fname))
-            (if (string-equal major-mode "dired-mode")
-                (dired-get-marked-files)
-              (list (buffer-file-name)))))
-         ($do-it-p (if (<= (length $file-list) 5)
-                       t
-                     (y-or-n-p "Open more than 5 files? "))))
-    (when $do-it-p
-       ((string-equal system-type "windows-nt")
-        (mapc
-         (lambda ($fpath)
-           (w32-shell-execute "open" $fpath)) $file-list)))))
+(with-eval-after-load 'dired
+	(define-key dired-mode-map (kbd "<C-return>") 'open-in-external-app ))
+
 
 ;; Update packages
 (defun update-all-packages ()
@@ -88,7 +77,7 @@ Version 2019-11-04"
   "Execute the current python file."
   (interactive)
 	(python-shell-send-file buffer-file-name))
-   
+
 (defun python-quit-interpreter ()
   (interactive)
   (switch-to-buffer "*Python*")

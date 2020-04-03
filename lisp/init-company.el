@@ -15,8 +15,10 @@
   :bind (("C-s" . swiper-isearch)
          ("C-." . imenu)
          ("C-x C-r" . counsel-buffer-or-recentf)
-         ("C-c B" . counsel-bookmarked-directory)
-  :map counsel-mode-map
+				 ("C-c r" . counsel-rg)     ;; Suport search content in the current project.
+         ("C-c m" . counsel-bookmarked-directory)
+				 ("C-c l" . counsel-locate) ;; Suport search files from everywhere.
+				 :map counsel-mode-map
          ([remap dired] . counsel-dired)
          ([remap swiper] . counsel-grep-or-swiper)
          ([remap swiper-backward] . counsel-grep-or-swiper-backward)
@@ -30,6 +32,10 @@
 
 
   :custom
+	(ivy-re-builders-alist
+	 '((read-file-name-internal . ivy--regex-fuzzy)
+		 (t . ivy--regex-plus)))
+	
   (enable-recursive-minibuffers t) ; Allow commands in minibuffers
   (ivy-use-virtual-buffer nil)
   (ivy-use-selectable-prompt t)
@@ -47,7 +53,7 @@
     (interactive)
     (ivy--cd "e:/"))
 
-   ;; Integrate yasnippet
+  ;; Integrate yasnippet 中文测试
   (use-package ivy-yasnippet
     :commands ivy-yasnippet--preview
     :bind ("C-c C-y" . ivy-yasnippet)
@@ -55,6 +61,7 @@
 
 ;; Complete everything
 (use-package company
+	:diminish
   :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
   :commands company-abort
   :bind (("<backtab>" . company-yasnippet)
@@ -83,7 +90,7 @@
         company-dabbrev-ignore-case nil
         company-dabbrev-downcase nil
 	;; Forbid company mode in some mode.
-        company-global-modes '(not erc-mode message-mode help-mode gud-mode shell-mode)
+        company-global-modes '(not erc-mode message-mode help-mode gud-mode shell-mode eshell-mode)
         company-backends '(company-capf)
         company-frontends '(company-pseudo-tooltip-frontend
                             company-echo-metadata-frontend))

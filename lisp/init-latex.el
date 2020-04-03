@@ -10,27 +10,27 @@
   :init
   (setq outline-minor-mode-prefix [(control o)])
   ;; Query for master file.
-  (setq-default TeX-master nil) 
+  (setq-default TeX-master nil)
   (setq TeX-parse-selt t)
 
-  ;; Search via pdf	
-  (setq TeX-PDF-mode t) 
-  (setq TeX-source-correlate-mode t) 
-  (setq TeX-source-correlate-method 'synctex) 
-  (setq TeX-view-program-list 
+  ;; Search via pdf
+  (setq TeX-PDF-mode t)
+  (setq TeX-source-correlate-mode t)
+  (setq TeX-source-correlate-method 'synctex)
+  (setq TeX-view-program-list
        '(("Sumatra PDF" ("\"D:/SumatraPDF/SumatraPDF.exe\" -reuse-instance" (mode-io-correlate " -forward-search %b %n ") " %o"))))
 
  :bind
   ("C-c C-p d" . TeX-clean)
   :hook
   (LaTeX-mode-hook . (lambda ()
-		      (turn-on-cdlatex) 
-		      (outline-minor-mode) 
-		      (turn-on-reftex)  
-		      (auto-fill-mode)  
-		      (TeX-fold-mode t) 
-		      (outline-hide-body) 
-		      (assq-delete-all (quote output-pdf) TeX-view-program-selection)   
+		      (turn-on-cdlatex)
+		      (outline-minor-mode)
+		      (turn-on-reftex)
+		      (auto-fill-mode)
+		      (TeX-fold-mode t)
+		      (outline-hide-body)
+		      (assq-delete-all (quote output-pdf) TeX-view-program-selection)
 		      (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
  :config
  ;; match parentheses.

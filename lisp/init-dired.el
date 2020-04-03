@@ -17,11 +17,7 @@
   :config
   ;; Always delete and copy recursively
   (setq dired-recursive-deletes 'always
-        dired-recursive-copies 'always
-        dired-dwim-target t)
-
-  ;; Using `insert-directory-program'
-  (setq ls-lisp-use-insert-directory-program t)
+        dired-recursive-copies 'always)
 
   ;; Allow copy files from dired-mode to the select files.
   (use-package dired-rsync
