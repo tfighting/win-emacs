@@ -5,6 +5,26 @@
 ;; Author: T_Fighting <545298210@qq.com>
 ;; Keywords: Windows
 
+
+;; Restore old window configurations
+(use-package winner
+  :ensure nil
+  :commands (winner-undo winner-redo)
+  :hook (after-init . winner-mode)
+	:bind
+	(("C-z u" . winner-undo)
+	 ("C-z r " . winner-redo))
+  :init (setq winner-boring-buffers '("*Completions*"
+                                      "*Compile-Log*"
+                                      "*inferior-lisp*"
+                                      "*Fuzzy Completions*"
+                                      "*Apropos*"
+                                      "*Help*"
+                                      "*cvs*"
+                                      "*Buffer List*"
+                                      "*Ibuffer*"
+                                      "*esh command on file*")))
+
 ;;; Better switch windows
 (use-package ace-window
   :demand t

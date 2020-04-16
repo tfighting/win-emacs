@@ -45,7 +45,7 @@
 			;; display custom file
 			(,""
        "Settings"
-			 
+
        "Open custom file"
        (lambda (&rest _) (find-file custom-file)))
 

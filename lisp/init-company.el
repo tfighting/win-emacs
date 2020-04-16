@@ -17,7 +17,7 @@
          ("C-x C-r" . counsel-buffer-or-recentf)
 				 ("C-c r" . counsel-rg)     ;; Suport search content in the current project.
          ("C-c m" . counsel-bookmarked-directory)
-				 ("C-c l" . counsel-locate) ;; Suport search files from everywhere.
+				 ("C-c f" . counsel-locate) ;; Suport search files from everywhere.
 				 :map counsel-mode-map
          ([remap dired] . counsel-dired)
          ([remap swiper] . counsel-grep-or-swiper)
@@ -35,7 +35,7 @@
 	(ivy-re-builders-alist
 	 '((read-file-name-internal . ivy--regex-fuzzy)
 		 (t . ivy--regex-plus)))
-	
+
   (enable-recursive-minibuffers t) ; Allow commands in minibuffers
   (ivy-use-virtual-buffer nil)
   (ivy-use-selectable-prompt t)

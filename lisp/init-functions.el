@@ -63,7 +63,7 @@
     :if (not (daemonp))
     :custom
     (auto-package-update-delete-old-versions t)
-    ;; (auto-package-update-hide-results nil)
+    (auto-package-update-hide-results nil)
     :init
     (auto-package-update-now))
   (message "Updating all packages done!"))
@@ -106,8 +106,24 @@
   (interactive)
   (call-interactively  #'move-end-of-line)
   (call-interactively #'newline))
-(global-set-key (kbd "C-j") 'jump-to-newline)
+(global-set-key (kbd "<M-f2>") 'jump-to-newline)
 
+;;
+;; Org
+;;
+
+(defun insert-template ()
+	"Insert keywords template"
+	(interactive)
+	(let (text)
+    (when (region-active-p)
+      (setq text (buffer-substring (region-beginning) (region-end)))
+      (delete-region (region-beginning) (region-end)))
+    (insert "#+")
+		(complete-symbol text)))
+
+(with-eval-after-load 'org
+	(define-key org-mode-map (kbd "C-c k") 'insert-template))
 
 (provide 'init-functions)
 

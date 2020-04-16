@@ -2,7 +2,7 @@
 ;;
 ;; Code:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Startup Configuration ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Startup Configuration ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Speed up startup
 (defvar t_fighting-gc-cons-threshold  80000000
   "The default value to use for `gc-cons-threshold'.
@@ -86,29 +86,18 @@ If you experience freezing,decrease this. If you experience stuttering, increase
 (require 'init-custom)
 (require 'init-basic)
 (require 'init-fonts)
+(require 'init-hydra)
 (require 'init-functions)
 (require 'init-edit)
+(require 'init-dired)
+(require 'init-search)
 (require 'init-company)
-(require 'init-dashboard)
+(require 'init-awesome-tab)
+;;(require 'init-dashboard)
 (require 'init-latex)
 (require 'init-org)
+(require 'init-markdown)
 (require 'init-windows)
 (require 'init-lsp)
 (require 'init-python)
 (require 'init-utils)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

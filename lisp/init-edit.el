@@ -47,6 +47,32 @@
                                    (line-end-position))
                       (message "killed line")))))
 
+;; Highlight symbols
+(use-package symbol-overlay
+  :diminish
+  :functions (turn-off-symbol-overlay turn-on-symbol-overlay)
+  :custom-face (symbol-overlay-default-face ((t (:inherit (region bold)))))
+  :bind (("M-n" . symbol-overlay-jump-next)
+				 ("M-p" . symbol-overlay-jump-prev)
+				 ([M-f3] . symbol-overlay-remove-all))
+  :hook ((prog-mode . symbol-overlay-mode)
+         (iedit-mode . turn-off-symbol-overlay)
+         (iedit-mode-end . turn-on-symbol-overlay))
+  :init (setq symbol-overlay-idle-time 0.1)
+  :config
+  ;; Disable symbol highlighting while selecting
+  (defun turn-off-symbol-overlay (&rest _)
+    "Turn off symbol highlighting."
+    (interactive)
+    (symbol-overlay-mode -1))
+  (advice-add #'set-mark :after #'turn-off-symbol-overlay)
+
+  (defun turn-on-symbol-overlay (&rest _)
+    "Turn on symbol highlighting."
+    (interactive)
+    (when (derived-mode-p 'prog-mode)
+      (symbol-overlay-mode 1)))
+  (advice-add #'deactivate-mark :after #'turn-on-symbol-overlay))
 
 
 ;; Jump to things in Emacs tree-style

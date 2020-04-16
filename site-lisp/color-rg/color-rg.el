@@ -426,8 +426,9 @@ used to restore window configuration after apply changed.")
     (define-key map (kbd "k") 'color-rg-jump-prev-keyword)
     (define-key map (kbd "h") 'color-rg-jump-next-file)
     (define-key map (kbd "l") 'color-rg-jump-prev-file)
-    (define-key map (kbd "RET") 'color-rg-open-file)
-    (define-key map (kbd "C-m") 'color-rg-open-file)
+    (define-key map (kbd "SPC") 'color-rg-open-file)
+    (define-key map (kbd "RET") 'color-rg-open-file-and-stay)
+    (define-key map (kbd "C-m") 'color-rg-open-file-and-stay)
 
     (define-key map (kbd "r") 'color-rg-replace-all-matches)
     (define-key map (kbd "f") 'color-rg-filter-match-results)
@@ -677,7 +678,7 @@ CASE-SENSITIVE determinies if search is case-sensitive."
 
           (list "--column --color=always -H")
 
-          ;; NOTE:
+          ;; NOTE:                      ;
           ;;
           ;; ripgrep is default use heading option (group matches by each file) in all OS's terminal.
           ;; But not greoup matches on Windows/Emacs.
@@ -707,10 +708,14 @@ CASE-SENSITIVE determinies if search is case-sensitive."
 
           (list "-e <R>" (color-rg-filter-tramp-path dir)))))
 
-    (grep-expand-template
-     (mapconcat 'identity (cons "rg" (delete-dups command-line)) " ")
-     keyword
-     (if (color-rg-is-custom-file-pattern globs) "custom" globs))))
+    (setq command-line
+          (grep-expand-template
+           (mapconcat 'identity (cons "rg" (delete-dups command-line)) " ")
+           keyword
+           (if (color-rg-is-custom-file-pattern globs) "custom" globs)))
+    (when (memq system-type '(cygwin windows-nt ms-dos))
+      (setq command-line (encode-coding-string command-line 'gbk)))
+    command-line))
 
 (defun color-rg-filter-tramp-path (x)
   "Remove sudo from path.  Argument X is path."
@@ -1126,7 +1131,11 @@ This assumes that `color-rg-in-string-p' has already returned true, i.e.
          (search-globs
           (or globs
               "everything")))
-    (color-rg-search search-keyboard search-directory search-globs)))
+    (color-rg-search search-keyboard
+                     (if (string-equal system-type "windows-nt")
+                         (format "\"%s\"" search-directory)
+                       search-directory)
+                     search-globs)))
 
 (defun color-rg-search-symbol ()
   (interactive)
@@ -1408,7 +1417,7 @@ This function is the opposite of `color-rg-rerun-change-globs'"
           (color-rg-open-file))
       (message "Reach to first file."))))
 
-(defun color-rg-open-file ()
+(defun color-rg-open-file (&optional stay)
   (interactive)
   (let* ((match-file (color-rg-get-match-file))
          (match-line (color-rg-get-match-line))
@@ -1446,18 +1455,23 @@ This function is the opposite of `color-rg-rerun-change-globs'"
                  (color-rg-move-to-point match-line match-column)))))
       ;; Flash match line.
       (color-rg-flash-line))
-    ;; Keep cursor in search buffer's window.
-    (setq color-buffer-window (get-buffer-window color-rg-buffer))
-    (if color-buffer-window
-        (select-window color-buffer-window)
-      ;; Split window and select if color-buffer is not exist in windows.
-      (delete-other-windows)
-      (split-window)
-      (other-window 1)
-      (switch-to-buffer color-rg-buffer))
+    (unless stay
+      ;; Keep cursor in search buffer's window.
+      (setq color-buffer-window (get-buffer-window color-rg-buffer))
+      (if color-buffer-window
+          (select-window color-buffer-window)
+        ;; Split window and select if color-buffer is not exist in windows.
+        (delete-other-windows)
+        (split-window)
+        (other-window 1)
+        (switch-to-buffer color-rg-buffer)))
     ;; Ajust column position.
     (color-rg-move-to-column match-column)
     ))
+
+(defun color-rg-open-file-and-stay ()
+  (interactive)
+  (color-rg-open-file t))
 
 (defun color-rg-flash-line ()
   (let ((pulse-iterations 1)
